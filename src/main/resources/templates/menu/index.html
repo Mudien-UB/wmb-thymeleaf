@@ -5,79 +5,100 @@
     <title>Menu List</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body>
 
-<header th:replace="~{fragments/header :: header}"></header>
+<div th:replace="~{layouts/base-layout :: base-layout(~{::main})}">
 
-<section class="max-w-4xl min-h-screen flex flex-col item-center mx-auto mt-10 px-4 py-10">
-    <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Menu List</h1>
+    <main class="max-w-11/12 flex flex-col justify-center items-center mx-auto mt-10 px-6 py-4 bg-white shadow-lg rounded-lg">
+        <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Menu List</h1>
 
-    <div class="flex w-max mb-5 ">
-        <button
-                class="px-4 py-2 bg-blue-800 text-blue-50 rounded-md shadow font-semibold hover:bg-blue-700 transition"
-                th:onclick="|window.location.href='/menu/add'|"
-        >
-            Add New
-        </button>
-    </div>
-    <!-- When data exists -->
-    <div th:if="${not #lists.isEmpty(menuList)}" class="overflow-x-auto rounded-lg shadow">
-        <table class="min-w-full divide-y divide-gray-200 bg-white">
-            <thead class="bg-blue-600">
-            <tr class="text-center text-sm font-semibold text-white">
-                <th class="px-4 py-3">ID</th>
-                <th class="px-4 py-3">Name</th>
-                <th class="px-4 py-3">Description</th>
-                <th class="px-4 py-3">Price</th>
-                <th class="px-4 py-3">Category</th>
-                <th class="px-4 py-3">Action</th>
-            </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-            <tr th:each="menu, iterStat : ${menuList}" class="hover:bg-gray-50 transition">
-                <td class="px-4 py-2" th:text="${iterStat.index + 1}"></td>
-                <td class="px-4 py-2" th:text="${menu.name}"></td>
-                <td class="px-4 py-2" th:text="${menu.description}"></td>
-                <td class="px-4 py-2" th:text="${@formatHelper.rupiah(menu.price)}"></td>
-                <td class="px-4 py-2" th:text="${menu.menuCategory}"></td>
+        <section class="flex items-center justify-between mx-auto w-full">
+            <div class="flex w-max mb-5">
+                <button
+                        class="px-4 py-2 bg-blue-800 text-blue-50 rounded-md shadow font-semibold hover:bg-blue-700 transition"
+                        th:onclick="|window.location.href='/menu/add'|">
+                    Add New
+                </button>
+            </div>
 
+            <form id="menuSearchForm" method="get" th:action="@{/menu}" class="flex items-center gap-4 mb-6">
+                <!-- ASC/DESC Toggle -->
+                <label class="flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                            type="checkbox"
+                            name="asc"
+                            value="true"
+                            th:checked="${asc}"
+                            onchange="this.form.submit()"
+                            class="sr-only peer" />
+                    <span class="flex items-center justify-center w-10 h-10 rounded-md border border-gray-300 bg-white shadow-sm peer-checked:rotate-180 p-2 transition">
+                        <img src="/icons/direction.svg" alt="Direction Icon" class="w-full ratio-square peer-checked:rotate-180" />
+                    </span>
+                </label>
 
-                <td class="px-4 py-2 text-center">
-                    <button class="bg-green-500 text-white px-4 py-2 rounded"
-                            th:onclick="|window.location.href='/menu/edit/${menu.id}'|">
-                        Edit
-                    </button>
+                <!-- Search Input -->
+                <input type="text" name="name"
+                       placeholder="Search..."
+                       th:value="${paramName}"
+                       id="searchInput"
+                       class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-200" />
 
-                    <form th:action="@{'/menu/delete/' + ${menu.id}}" method="post"
-                          onsubmit="return confirm('Are you sure you want to delete this menu?');"
-                          style="display: inline;">
-                        <input type="hidden" name="_method" value="delete" />
-                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">
-                            Delete
+                <!-- SortBy Dropdown -->
+                <select name="sortBy"
+                        class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-200"
+                        onchange="this.form.submit()">
+                    <option disabled selected>Sort By</option>
+                    <option value="updatedAt" th:selected="${paramSortBy == 'updatedAt'}">Default</option>
+                    <option value="name" th:selected="${paramSortBy == 'name'}">Name</option>
+                    <option value="price" th:selected="${paramSortBy == 'price'}">Price</option>
+                </select>
+            </form>
+        </section>
+
+        <div th:if="${not #lists.isEmpty(menuList)}" class="overflow-x-auto rounded-lg shadow max-h-[600px] w-full">
+            <table class="min-w-full divide-y divide-gray-200 bg-white">
+                <thead class="bg-blue-600 sticky top-0">
+                <tr class="text-left text-sm font-semibold text-white">
+                    <th class="px-4 py-3">No</th>
+                    <th class="px-4 py-3">Name</th>
+                    <th class="px-4 py-3">Description</th>
+                    <th class="px-4 py-3">Price</th>
+                    <th class="px-4 py-3">Category</th>
+                    <th class="px-4 py-3 text-center">Action</th>
+                </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                <tr th:each="menu, iterStat : ${menuList}" class="hover:bg-gray-50 transition">
+                    <td class="px-4 py-2" th:text="${iterStat.index + 1}"></td>
+                    <td class="px-4 py-2" th:text="${menu.name}"></td>
+                    <td class="px-4 py-2" th:text="${menu.description}"></td>
+                    <td class="px-4 py-2" data-price th:text="${menu.price}"></td>
+                    <td class="px-4 py-2" th:text="${menu.menuCategory}"></td>
+                    <td class="px-4 py-2 text-center overflow-x-auto">
+                        <button class="bg-green-500 text-white px-2 py-1 rounded"
+                                th:onclick="|window.location.href='/menu/edit/${menu.id}'|">
+                            Edit
                         </button>
-                    </form>
+                        <form th:action="@{'/menu/delete/' + ${menu.id}}" method="post"
+                              onsubmit="return confirm('Are you sure you want to delete this menu ?');"
+                              style="display: inline;">
+                            <input type="hidden" name="_method" value="delete" />
+                            <button type="submit" class="bg-red-500 text-white px-2 py-1 rounded">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <p th:if="${#lists.isEmpty(menuList)}" class="text-center text-gray-500 mt-10">
+            No menu available.
+        </p>
+    </main>
+</div>
 
-    <!-- When empty -->
-    <p th:if="${#lists.isEmpty(menuList)}" class="text-center text-gray-500 mt-10">
-        No menu available.
-    </p>
-</section>
-
-<footer th:replace="fragments/footer :: footer"></footer>
-
-<script>
-    function confirmDelete(id) {
-        if (confirm('Are you sure you want to delete this menu?')) {
-            window.location.href = '/menu/delete/' + id;
-        }
-    }
-</script>
-
+<script type="module" src="/js/menuList.js"></script>
 </body>
 </html>
