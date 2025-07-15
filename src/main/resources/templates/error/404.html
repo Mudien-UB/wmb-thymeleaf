@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>404 Not Found</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-gradient-to-b from-blue-50 to-white text-gray-800 flex items-center justify-center min-h-screen">
+<div class="bg-white w-full max-w-xl mx-4 p-8 rounded-xl shadow-2xl border border-gray-100 text-center">
+    <h1 class="text-6xl font-extrabold text-blue-600 mb-4" th:text="${status}" ></h1>
+    <h2 class="text-2xl font-semibold mb-2  " th:text="${message}"></h2>
+    <button id="back"
+       class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+        Back
+    </button>
+</div>
+
+<script>
+    document.getElementById('back').addEventListener('click', () => {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = '/';
+        }
+    });
+</script>
+
+</body>
+</html>

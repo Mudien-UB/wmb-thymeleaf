@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="base-layout(content)">
+    <body class="bg-gray-50 text-gray-900">
+
+    <!-- HEADER untuk user -->
+    <header th:replace="~{fragments/header :: header}"></header>
+
+    <!-- Main content (dinamis) -->
+    <main class="w-11/12 mx-auto py-10 min-h-screen">
+        <div th:replace="${content}"></div>
+    </main>
+
+    <!-- FOOTER untuk user -->
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+    </body>
+</div>
+</body>
+</html>
