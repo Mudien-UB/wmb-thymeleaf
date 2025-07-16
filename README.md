@@ -12,6 +12,9 @@ Aplikasi *Warung Makan Bahari* adalah proyek pembelajaran menggunakan **Spring B
 - Tambah, edit, hapus menu
 - Template dengan Thymeleaf
 - Validasi input form
+- cari menu berdasarkan nama input
+- sorting menu berdasarkan ( nama, update terbaru, harga )
+- filtering menu berdasarkan kategori menu ( food, snack, drink, coffee )
 
 ---
 
@@ -25,6 +28,66 @@ Aplikasi *Warung Makan Bahari* adalah proyek pembelajaran menggunakan **Spring B
 - **TailwindCSS**
 
 ---
+
+## Direktori mapping
+```bash
+./src/main
+├── java
+│   └── com
+│       └── hehe
+│           └── wmb
+│               ├── config
+│               │   └── WebConfiguration.java
+│               ├── controller
+│               │   ├── HomeController.java
+│               │   └── MenuController.java
+│               ├── dto
+│               │   ├── request
+│               │   │   ├── MenuFilterRequest.java
+│               │   │   └── MenuRequest.java
+│               │   └── validation
+│               │       └── OnUpdate.java
+│               ├── entity
+│               │   ├── enums
+│               │   │   └── MenuCategory.java
+│               │   └── Menu.java
+│               ├── repository
+│               │   └── MenuRepository.java
+│               ├── service
+│               │   ├── impl
+│               │   │   └── MenuServiceImpl.java
+│               │   └── MenuService.java
+│               └── WmbApplication.java
+└── resources
+    ├── application.properties
+    ├── static
+    │   ├── css
+    │   ├── icons
+    │   │   └── direction.svg
+    │   └── js
+    │       ├── formatRupiah.js
+    │       ├── menuList.js
+    │       └── priceFormat.js
+    └── templates
+        ├── error
+        │   ├── 404.html
+        │   ├── 405.html
+        │   └── 500.html
+        ├── fragments
+        │   ├── footer.html
+        │   ├── header.html
+        │   └── navigation-page.html
+        ├── index.html
+        ├── layouts
+        │   └── base-layout.html
+        └── menu
+            ├── add-menu.html
+            ├── edit-menu.html
+            └── index.html
+
+
+
+```
 
 ## Cara Menjalankan
 
