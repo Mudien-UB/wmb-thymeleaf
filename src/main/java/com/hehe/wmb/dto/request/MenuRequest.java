@@ -1,7 +1,7 @@
 package com.hehe.wmb.dto.request;
 
 import com.hehe.wmb.dto.validation.OnUpdate;
-import com.hehe.wmb.model.enums.MenuCategory;
+import com.hehe.wmb.entity.enums.MenuCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

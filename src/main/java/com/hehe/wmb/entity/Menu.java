@@ -1,6 +1,6 @@
-package com.hehe.wmb.model;
+package com.hehe.wmb.entity;
 
-import com.hehe.wmb.model.enums.MenuCategory;
+import com.hehe.wmb.entity.enums.MenuCategory;
 import jakarta.persistence.*;
 import lombok.*;
 

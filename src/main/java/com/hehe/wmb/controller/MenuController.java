@@ -3,19 +3,18 @@ package com.hehe.wmb.controller;
 import com.hehe.wmb.dto.request.MenuFilterRequest;
 import com.hehe.wmb.dto.request.MenuRequest;
 import com.hehe.wmb.dto.validation.OnUpdate;
-import com.hehe.wmb.model.Menu;
-import com.hehe.wmb.model.enums.MenuCategory;
+import com.hehe.wmb.entity.Menu;
+import com.hehe.wmb.entity.enums.MenuCategory;
 import com.hehe.wmb.service.MenuService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/menu")
@@ -33,11 +32,14 @@ public class MenuController {
      * Fitur:
      * - Mendukung filter nama menu
      * - Mendukung pengurutan berdasarkan kolom tertentu (sortBy) dan arah ascending/descending (asc)
+     * - Mendukung pagination
      *
      * @param model Model untuk dikirim ke view
      * @param name Parameter pencarian nama menu (opsional)
      * @param sortBy Kolom untuk pengurutan (opsional)
      * @param asc Arah pengurutan (default false = descending)
+     * @param page Halaman pagination data (default value 1)
+     * @param size Ukuran data tiap halaman pagination (default value 10)
      * @return nama view (menu/index)
      */
     @GetMapping({"","/"})
@@ -45,7 +47,10 @@ public class MenuController {
             Model model,
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "sortBy", required = false) String sortBy,
-            @RequestParam(value = "asc", required = false, defaultValue = "false") boolean asc
+            @RequestParam(value = "asc", required = false, defaultValue = "false") boolean asc,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+            @RequestParam(value = "category", required = false) String category
     ) {
 
         MenuFilterRequest menuFilterRequest = new MenuFilterRequest();
@@ -56,13 +61,42 @@ public class MenuController {
             menuFilterRequest.setSortBy(sortBy);
         }
         menuFilterRequest.setAsc(asc);
+        menuFilterRequest.setPage(page);
+        menuFilterRequest.setSize(size);
 
-        List<Menu> menuList = menuService.getAllMenus(menuFilterRequest);
+        if(StringUtils.hasText(category)){
+            MenuCategory.fromString(category.toUpperCase()).ifPresent(menuFilterRequest::setCategory);
+        }
 
+        Page<Menu> menuList = menuService.getAllMenusByPage(menuFilterRequest);
+
+        // kirim data ke thymeleaf
         model.addAttribute("menuList", menuList);
+
+        // kirim param search name, direction dan sortBy
         model.addAttribute("paramName", name);
         model.addAttribute("asc", menuFilterRequest.isAsc());
         model.addAttribute("paramSortBy", menuFilterRequest.getSortBy());
+
+        // kirim param pagination
+        model.addAttribute("paramPage", menuFilterRequest.getPage());
+        model.addAttribute("paramSize", menuFilterRequest.getSize());
+
+        // buat startPage dan endPage
+        int currentPage = menuList.getNumber() + 1;
+        int totalPages = menuList.getTotalPages();
+        int startPage = Math.max(currentPage - 1, 1);
+        int endPage = Math.min(currentPage + 1, totalPages);
+
+        // kirim data startPage dan endPage
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        // kirim filter param by category
+        model.addAttribute("categories", MenuCategory.values());
+        String paramCategory = menuFilterRequest.getCategory() != null ? menuFilterRequest.getCategory().name() : null;
+        model.addAttribute("paramCategory",  paramCategory);
+
 
         return "menu/index";
     }
@@ -106,7 +140,7 @@ public class MenuController {
         try {
             menuService.addMenu(request);
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Gagal menyimpan menu: " + e.getMessage());
+            model.addAttribute("errorMessage", "Gagal menyimpan menu: " + e.getCause().getMessage());
             model.addAttribute("categories", MenuCategory.values());
             return "menu/add-menu";
         }
