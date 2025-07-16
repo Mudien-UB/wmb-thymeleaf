@@ -1,0 +1,54 @@
+<section th:fragment="navigation-page(dataPage)" >
+
+<div th:if="${dataPage.totalPages > 1}" class="flex justify-center mt-6">
+    <nav class="inline-flex items-center gap-2">
+        <!-- Previous -->
+        <a th:if="${dataPage.hasPrevious()}"
+           th:href="@{/menu(page=${paramPage - 1}, size=${paramSize}, name=${paramName}, category=${paramCategory} ,sortBy=${paramSortBy}, asc=${asc})}"
+           class="px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="24"
+                 height="24"
+                 fill="currentColor"
+                 viewBox="0 0 24 24">
+                <path d="M16 4l-8 8 8 8"/>
+            </svg>
+        </a>
+        <span th:unless="${dataPage.hasPrevious()}" class="px-3 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-400 shadow-sm cursor-not-allowed" >
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="24"
+                         height="24"
+                         fill="currentColor"
+                         viewBox="0 0 24 24">
+                        <path d="M16 4l-8 8 8 8"/>
+                    </svg>
+                </span>
+        
+        <!-- Page Numbers -->
+        <span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                  <a th:href="@{/menu(page=${i}, size=${paramSize}, name=${paramName},category=${paramCategory} ,sortBy=${paramSortBy}, asc=${asc})}"
+                     th:text="${i}"
+                     th:classappend="${i == paramPage} ? ' bg-blue-600 text-white ' : ' bg-white text-gray-700 hover:bg-gray-100 '"
+                     class="px-3 py-2 rounded-md border border-gray-300 shadow-sm">
+                  </a>
+                </span>
+        
+        
+        <!-- Next -->
+        <a th:if="${dataPage.hasNext()}"
+           th:href="@{/menu(page=${paramPage + 1}, size=${paramSize}, name=${paramName},category=${paramCategory}, sortBy=${paramSortBy}, asc=${asc})}"
+           class="px-3 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 shadow-sm"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 4l8 8-8 8"/>
+            </svg>
+        </a>
+        <span th:unless="${dataPage.hasNext()}"
+              class="px-3 py-2 rounded-md border border-gray-200 bg-gray-100 text-gray-400 shadow-sm cursor-not-allowed">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 4l8 8-8 8"/>
+                  </svg>
+                </span>
+    </nav>
+</div>
+</section>

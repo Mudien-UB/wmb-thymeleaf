@@ -2,11 +2,15 @@ package com.hehe.wmb.service.impl;
 
 import com.hehe.wmb.dto.request.MenuFilterRequest;
 import com.hehe.wmb.dto.request.MenuRequest;
-import com.hehe.wmb.model.Menu;
+import com.hehe.wmb.entity.Menu;
 import com.hehe.wmb.repository.MenuRepository;
 import com.hehe.wmb.service.MenuService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,19 +29,31 @@ public class MenuServiceImpl implements MenuService {
         return menuRepository.findAll();
     }
 
-
     @Override
-    public List<Menu> getAllMenus(MenuFilterRequest menuFilterRequest) {
+    public Page<Menu> getAllMenusByPage(MenuFilterRequest menuFilterRequest) {
 
+        // buat sorting dan direction
         Sort sort = Sort.by(
                 menuFilterRequest.isAsc() ? Sort.Direction.ASC : Sort.Direction.DESC ,
                 menuFilterRequest.getSortBy()
         );
 
-        return menuRepository.findAllByNameContaining(
-                menuFilterRequest.getName(),
-                sort
-        );
+        // buat pagination
+        Pageable pageable = PageRequest.of(menuFilterRequest.getPage() - 1, menuFilterRequest.getSize(), sort);
+
+        if(menuFilterRequest.getCategory() == null) {
+            return menuRepository.findAllByNameContaining(
+                    menuFilterRequest.getName(),
+                    pageable
+            );
+        }else {
+            return menuRepository.findAllByNameContainingAndMenuCategory(
+                    menuFilterRequest.getName(),
+                    menuFilterRequest.getCategory(),
+                    pageable
+            );
+        }
+
     }
 
     @Override
