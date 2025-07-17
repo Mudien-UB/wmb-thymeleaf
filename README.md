@@ -15,6 +15,7 @@ Aplikasi *Warung Makan Bahari* adalah proyek pembelajaran menggunakan **Spring B
 - cari menu berdasarkan nama input
 - sorting menu berdasarkan ( nama, update terbaru, harga )
 - filtering menu berdasarkan kategori menu ( food, snack, drink, coffee )
+- modal pop up untuk konfirmasi hapus menu
 
 ---
 
@@ -65,15 +66,16 @@ Aplikasi *Warung Makan Bahari* adalah proyek pembelajaran menggunakan **Spring B
     │   ├── icons
     │   │   └── direction.svg
     │   └── js
-    │       ├── formatRupiah.js
-    │       ├── menuList.js
-    │       └── priceFormat.js
+    │       ├── rupiah-format.js
+    │       ├── menu-list.js
+    │       └── price-input-format-util.js
     └── templates
         ├── error
         │   ├── 404.html
         │   ├── 405.html
         │   └── 500.html
         ├── fragments
+        │   ├── confirm-delete.html
         │   ├── footer.html
         │   ├── header.html
         │   └── navigation-page.html
