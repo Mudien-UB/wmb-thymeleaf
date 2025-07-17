@@ -1,4 +1,4 @@
-export function formatRupiah(angka) {
+export function rupiahFormat(angka) {
     if (!angka) return 'Rp 0,00';
 
     let number = parseFloat(angka);

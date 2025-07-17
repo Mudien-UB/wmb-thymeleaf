@@ -1,4 +1,4 @@
-import { formatRupiah } from './formatRupiah.js';
+import { rupiahFormat } from './rupiah-format.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const formattedInput = document.getElementById('priceFormatted');
@@ -6,10 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!formattedInput || !rawInput) return;
 
-    // Prefill on load (e.g. edit page)
     if (rawInput.value) {
         const number = parseInt(rawInput.value) || 0;
-        formattedInput.value = formatRupiah(number);
+        formattedInput.value = rupiahFormat(number);
     }
 
     formattedInput.addEventListener('input', function () {
@@ -17,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const number = parseInt(numberString) || 0;
 
         rawInput.value = number;
-        this.value = formatRupiah(number);
+        this.value = rupiahFormat(number);
     });
 
     formattedInput.addEventListener('blur', function () {
@@ -25,6 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const number = parseInt(numberString) || 0;
 
         rawInput.value = number;
-        this.value = formatRupiah(number);
+        this.value = rupiahFormat(number);
     });
 });

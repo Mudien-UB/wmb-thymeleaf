@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-<div th:fragment="base-layout(content)">
-    <body class="bg-gray-50 text-gray-900">
+
+<div th:fragment="base-layout(content)"  class="bg-gray-50 text-gray-900">
 
     <!-- HEADER untuk user -->
     <header th:replace="~{fragments/header :: header}"></header>
@@ -14,7 +11,4 @@
 
     <!-- FOOTER untuk user -->
     <footer th:replace="~{fragments/footer :: footer}"></footer>
-    </body>
 </div>
-</body>
-</html>
